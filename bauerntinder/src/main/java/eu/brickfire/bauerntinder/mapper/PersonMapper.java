@@ -13,5 +13,5 @@ public interface PersonMapper {
     boolean selectEmailInPerson(@Param("email") String email);
     Helper selectHelperById(@Param("id") String id);
     Farmer selectFarmerById(@Param("id") String id);
-    void updatePerson(Person person);
+    void updatePersonById(Person person);
 }

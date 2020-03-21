@@ -6,8 +6,7 @@ import eu.brickfire.bauerntinder.type.Farmer;
 import eu.brickfire.bauerntinder.type.Helper;
 import eu.brickfire.bauerntinder.type.Person;
 
-import java.nio.charset.Charset;
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.UUID;
 
 public class PersonServiceImpl implements PersonService {
@@ -49,17 +48,35 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public String createToken(Person person) {
-        byte[] array = new byte[32];
-        new Random().nextBytes(array);
-        String generatedString = new String(array, Charset.forName("UTF-8"));
-        person.setToken(generatedString);
-        personMapper.updatePerson(person);
-        return generatedString;
+        person.setToken(generateRandomString(32));
+        personMapper.updatePersonById(person);
+        return person.getToken();
     }
 
     @Override
-    public boolean checkToken(String email, String token){
-        return personMapper.selectPersonByEmail(email).getToken().equals(token);
+    public boolean checkToken(String id, String token) {
+        return personMapper.selectPersonById(id).getToken().equals(token);
+    }
+
+    private static final String CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz";
+    private static final String CHAR_UPPER = CHAR_LOWER.toUpperCase();
+    private static final String NUMBER = "0123456789";
+
+    private static final String DATA_FOR_RANDOM_STRING = CHAR_LOWER + CHAR_UPPER + NUMBER;
+    private static SecureRandom random = new SecureRandom();
+
+    public static String generateRandomString(int length) {
+        if (length < 1) throw new IllegalArgumentException();
+
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int rndCharAt = random.nextInt(DATA_FOR_RANDOM_STRING.length());
+            char rndChar = DATA_FOR_RANDOM_STRING.charAt(rndCharAt);
+            sb.append(rndChar);
+        }
+
+        return sb.toString();
+
     }
 
 

@@ -34,7 +34,7 @@
 	</select>
 
 	<insert id="insertPerson" parameterType="eu.brickfire.bauerntinder.type.Person" useGeneratedKeys="true" keyProperty="person.id" keyColumn="id">
-		insert into bt_person (surname, firstname, email, phone, p.password, p.token) VALUE (#{name}, #{firstname}, #{email}, #{phone}, #{password}, #{token});
+		insert into bt_person (id, surname, firstname, email, phone, password, token) VALUE (#{id}, #{name}, #{firstname}, #{email}, #{phone}, #{password}, #{token});
 	</insert>
 
 	<select id="selectFarmerById" resultMap="farmer">
@@ -46,7 +46,7 @@
 	</select>
 
 	<update id="updatePersonById">
-		update person SET p.surname = #{name}, p.firstname = #{firstname}, p.email = #{email}, p.phone = #{phone}, p.password = #{password}, p.token = #{token} from bt_helper as h join bt_person p on p.id = h.id where p.id = #{id};
+		update bt_person SET surname = #{name}, firstname = #{firstname}, email = #{email}, phone = #{phone}, password = #{password}, token = #{token} where id = #{id};
 	</update>
 
 </mapper>

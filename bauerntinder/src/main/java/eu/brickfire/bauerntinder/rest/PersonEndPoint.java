@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 @Path("/")
 public class PersonEndPoint {
@@ -48,9 +49,11 @@ public class PersonEndPoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response savePerson(Person person) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        person.setPassword(digest.digest(person.getPassword().getBytes(StandardCharsets.UTF_8)).toString());
+        person.setPassword(Base64.getEncoder().encodeToString(digest.digest(person.getPassword().getBytes(StandardCharsets.UTF_8))));
+        JSONObject jsonObject = BauernTinderApp.getInjector().getInstance(PersonService.class).savePerson(person).getJSON();
+        jsonObject.put("token", BauernTinderApp.getInjector().getInstance(PersonService.class).createToken(person));
         return Response.status(201).entity(
-                BauernTinderApp.getInjector().getInstance(PersonService.class).savePerson(person).getJSON().toJSONString()
+                jsonObject.toJSONString()
         ).build();
     }
 
@@ -59,7 +62,7 @@ public class PersonEndPoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response loginPerson(Person personA) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        personA.setPassword(digest.digest(personA.getPassword().getBytes(StandardCharsets.UTF_8)).toString());
+        personA.setPassword(Base64.getEncoder().encodeToString(digest.digest(personA.getPassword().getBytes(StandardCharsets.UTF_8))));
         Person personB = BauernTinderApp.getInjector().getInstance(PersonService.class).getPersonByEmail(personA.getEmail());
         if(MessageDigest.isEqual(personA.getPassword().getBytes(), personB.getPassword().getBytes())) {
             JSONObject jsonObject = personB.getJSON();
@@ -75,7 +78,7 @@ public class PersonEndPoint {
     @POST
     @Path("token-login")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response tokenLoginPerson(Person personA) throws NoSuchAlgorithmException {
+    public Response tokenLoginPerson(Person personA) {
         if(BauernTinderApp.getInjector().getInstance(PersonService.class).checkToken(personA.getEmail(), personA.getToken())) {
             JSONObject jsonObject = BauernTinderApp.getInjector().getInstance(PersonService.class).getPersonByEmail(personA.getEmail()).getJSON();
             return Response.status(201).entity(jsonObject.toJSONString()).build();

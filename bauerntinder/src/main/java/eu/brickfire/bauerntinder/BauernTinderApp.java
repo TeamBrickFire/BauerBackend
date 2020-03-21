@@ -2,6 +2,7 @@ package eu.brickfire.bauerntinder;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.servlet.GuiceFilter;
 import eu.brickfire.bauerntinder.module.BauernTinderModule;
 import eu.brickfire.bauerntinder.rest.PersonEndPoint;
 import org.eclipse.jetty.server.Server;
@@ -9,6 +10,8 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 
+import javax.servlet.DispatcherType;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +37,8 @@ public class BauernTinderApp {
         server.setHandler(servletContextHandler);
 
         servletContextHandler.addServlet(ServletContainer.class, "/");
+        servletContextHandler.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
+        servletContextHandler.addFilter(BauernTinderFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 
 
         Map<String, Class> paths = new HashMap<>();

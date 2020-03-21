@@ -20,5 +20,5 @@ public interface PersonService {
 
     String createToken(Person person);
 
-    boolean checkToken(String email, String token);
+    boolean checkToken(String id, String token);
 }
