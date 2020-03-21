@@ -45,7 +45,7 @@
 		select p.id, p.surname, p.firstname, p.email, p.phone, p.password, p.token from bt_helper as h join bt_person p on p.id = h.id where p.id = #{id};
 	</select>
 
-	<update id="selectHelperById">
+	<update id="updatePersonById">
 		update person SET p.surname = #{name}, p.firstname = #{firstname}, p.email = #{email}, p.phone = #{phone}, p.password = #{password}, p.token = #{token} from bt_helper as h join bt_person p on p.id = h.id where p.id = #{id};
 	</update>
 
