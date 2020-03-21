@@ -1,0 +1,12 @@
+eu\brickfire\bauerntinder\module\MariaDBConfigModule$1.class
+eu\brickfire\bauerntinder\module\MariaDBConfigModule.class
+eu\brickfire\bauerntinder\type\Person.class
+eu\brickfire\bauerntinder\mapper\PersonMapper.class
+eu\brickfire\bauerntinder\BauernTinderApp.class
+eu\brickfire\bauerntinder\type\Helper.class
+eu\brickfire\bauerntinder\service\PersonServiceImpl.class
+eu\brickfire\bauerntinder\type\Farmer.class
+eu\brickfire\bauerntinder\module\BauernTinderModule.class
+eu\brickfire\bauerntinder\module\ServiceBindingModule.class
+eu\brickfire\bauerntinder\rest\PersonEndPoint.class
+eu\brickfire\bauerntinder\service\PersonService.class

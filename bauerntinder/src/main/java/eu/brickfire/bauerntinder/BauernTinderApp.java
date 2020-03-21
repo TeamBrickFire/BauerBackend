@@ -3,6 +3,7 @@ package eu.brickfire.bauerntinder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import eu.brickfire.bauerntinder.module.BauernTinderModule;
+import eu.brickfire.bauerntinder.rest.FieldEndPoint;
 import eu.brickfire.bauerntinder.rest.PersonEndPoint;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -38,6 +39,7 @@ public class BauernTinderApp {
 
         Map<String, Class> paths = new HashMap<>();
         paths.put(PersonEndPoint.PATH, PersonEndPoint.class);
+        paths.put(FieldEndPoint.PATH, FieldEndPoint.class);
 
         paths.forEach((path, point) -> {
             ServletHolder serHol = servletContextHandler.addServlet(ServletContainer.class, "/rest/json/" + path + "*");
