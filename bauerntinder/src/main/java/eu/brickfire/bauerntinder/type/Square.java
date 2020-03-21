@@ -27,7 +27,7 @@ public class Square implements Serializable {
     public JSONObject getJSON() {
         JSONObject json = new JSONObject();
         json.put("id", id);
-        json.put("fieldId", fieldId);
+        json.put("field_id", fieldId);
         return json;
     }
 }
