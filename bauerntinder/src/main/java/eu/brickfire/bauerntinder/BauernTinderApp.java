@@ -2,17 +2,13 @@ package eu.brickfire.bauerntinder;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.servlet.GuiceFilter;
 import eu.brickfire.bauerntinder.module.BauernTinderModule;
 import eu.brickfire.bauerntinder.rest.PersonEndPoint;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
 
-import javax.servlet.DispatcherType;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,21 +25,22 @@ public class BauernTinderApp {
     }
 
     private void start() throws Exception {
+
         Server server = new Server(Integer.parseInt(System.getenv("BAUERNTINDER_PORT")));
 
-        ServletContextHandler ctx =
-                new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
+        ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
 
-        ctx.setContextPath("/");
-        server.setHandler(ctx);
-        ctx.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
+        servletContextHandler.setContextPath("/");
+        server.setHandler(servletContextHandler);
+
+        servletContextHandler.addServlet(ServletContainer.class, "/");
+
 
         Map<String, Class> paths = new HashMap<>();
         paths.put(PersonEndPoint.PATH, PersonEndPoint.class);
 
-        ctx.addServlet(DefaultServlet.class, "/");
         paths.forEach((path, point) -> {
-            ServletHolder serHol = ctx.addServlet(ServletContainer.class, "/rest/json/" + path + "*");
+            ServletHolder serHol = servletContextHandler.addServlet(ServletContainer.class, "/rest/json/" + path + "*");
             serHol.setInitOrder(1);
             serHol.setInitParameter(CLASS, point.getCanonicalName());
         });
