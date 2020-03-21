@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="eu.brickfire.bauerntinder.mapper.PersonMapper">
+	
+	<resultMap id="person" type="eu.brickfire.bauerntinder.type.Person">
+		<result column="id" property="id"/>
+		<result column="surname" property="name"/>
+		<result column="firstname" property="firstname"/>
+		<result column="email" property="email"/>
+		<result column="phone" property="phone"/>
+	</resultMap>
+
+	<resultMap id="helper" type="eu.brickfire.bauerntinder.type.Helper" extends="person">
+	</resultMap>
+
+	<resultMap id="farmer" type="eu.brickfire.bauerntinder.type.Farmer" extends="person">
+	</resultMap>
+
+	<select id="selectEmailInPerson" resultType="boolean">
+		select count(1) from bt_person where email = #{email};
+	</select>
+
+	<select id="selectPersonById" resultMap="person">
+		select p.id, p.surname, p.firstname, p.email, p.phone from bt_person as p where p.id = #{id};
+	</select>
+
+	<insert id="insertPerson" parameterType="eu.brickfire.bauerntinder.type.Person" useGeneratedKeys="true" keyProperty="person.id" keyColumn="id">
+		insert into bt_person (surname, firstname, email, phone) VALUE (#{name}, #{firstname}, #{email}, #{phone});
+	</insert>
+
+	<select id="selectFarmerById" resultMap="farmer">
+		select p.id, p.surname, p.firstname, p.email, p.phone from bt_farmer as f join bt_person p on p.id = f.id where p.id = #{id};
+	</select>
+
+	<select id="selectHelperById" resultMap="helper">
+		select p.id, p.surname, p.firstname, p.email, p.phone from bt_helper as h join bt_person p on p.id = h.id where p.id = #{id};
+	</select>
+</mapper>
