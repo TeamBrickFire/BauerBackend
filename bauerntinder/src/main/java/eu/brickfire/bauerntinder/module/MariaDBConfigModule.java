@@ -6,6 +6,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import eu.brickfire.bauerntinder.mapper.FieldMapper;
 import eu.brickfire.bauerntinder.mapper.PersonMapper;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.mybatis.guice.MyBatisModule;
@@ -23,6 +24,7 @@ public class MariaDBConfigModule extends PrivateModule {
             protected void initialize() {
                 this.bindTransactionFactoryType(JdbcTransactionFactory.class);
                 this.addMapperClass(PersonMapper.class);
+                this.addMapperClass(FieldMapper.class);
 
                 Properties myBatisProperties = new Properties();
                 myBatisProperties.setProperty("mybatis.environment.id", "production");
@@ -50,6 +52,7 @@ public class MariaDBConfigModule extends PrivateModule {
             }
         });
         this.expose(PersonMapper.class);
+        this.expose(FieldMapper.class);
     }
 
 }
