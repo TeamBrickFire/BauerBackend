@@ -23,6 +23,12 @@ public class FieldEndPoint {
     }
 
     @GET
+    @Path("square/id/{id}")
+    public Response getSquareById(@PathParam("id") String id) {
+        return Response.status(201).entity(BauernTinderApp.getInjector().getInstance(FieldService.class).getSquareById(id).getJSON().toJSONString()).build();
+    }
+
+    @GET
     @Path("squares/{id}")
     public Response selectAllSquaresByFieldId(@PathParam("id") String id) {
         List<Square> allSquares = BauernTinderApp.getInjector().getInstance(FieldService.class).getAllSquaresByFieldId(id);

@@ -17,8 +17,12 @@
         select f.id, f.farmer_id from bt_field as f where f.id = #{id};
     </select>
 
+    <select id="selectSquareById" resultMap="square">
+        select sq.id, sq.field_id from bt_square as sq where sq.id = #{id};
+    </select>
+
     <select id="selectAllSquaresByFieldId" resultMap="square">
-        select sq.id from bt_square as sq where sq.field_id = #{id};
+        select sq.id, sq.field_id from bt_square as sq where sq.field_id = #{id};
     </select>
     
     <select id="selectAllHelperByFieldId" resultMap="eu.brickfire.bauerntinder.mapper.PersonMapper.helper">
@@ -31,5 +35,9 @@
 
     <insert id="insertField" parameterType="eu.brickfire.bauerntinder.type.Field" useGeneratedKeys="true" keyProperty="farmer.id" keyColumn="id">
         insert into bt_field (id, farmer_id) value (#{id}, #{farmerId});
+    </insert>
+
+    <insert id="insertSquare" parameterType="eu.brickfire.bauerntinder.type.Square" useGeneratedKeys="true" keyProperty="farmer.id" keyColumn="id">
+        insert into bt_square (id, field_id) value (#{id}, #{fieldId});
     </insert>
 </mapper>

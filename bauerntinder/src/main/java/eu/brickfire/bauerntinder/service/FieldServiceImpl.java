@@ -19,6 +19,9 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
+    public Square getSquareById(String id) { return fieldMapper.selectSquareById(id); }
+
+    @Override
     public List<Square> getAllSquaresByFieldId(String id) {
         return fieldMapper.selectAllSquaresByFieldId(id);
     }
@@ -35,4 +38,13 @@ public class FieldServiceImpl implements FieldService {
         fieldMapper.insertField(field);
         return getFieldById(field.getId());
     }
+
+    @Override
+    public Square insertSquare(Square square) {
+        square.setId(UUID.randomUUID().toString());
+        fieldMapper.insertSquare(square);
+        return getSquareById(square.getId());
+    }
+
+
 }
