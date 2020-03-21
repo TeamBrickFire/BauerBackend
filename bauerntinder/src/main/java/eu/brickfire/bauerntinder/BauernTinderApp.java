@@ -7,6 +7,7 @@ import eu.brickfire.bauerntinder.module.BauernTinderModule;
 import eu.brickfire.bauerntinder.rest.FieldEndPoint;
 import eu.brickfire.bauerntinder.rest.PersonEndPoint;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -15,6 +16,8 @@ import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 
 public class BauernTinderApp {
 
@@ -32,15 +35,19 @@ public class BauernTinderApp {
 
         Server server = new Server(Integer.parseInt(System.getenv("BAUERNTINDER_PORT")));
 
+        FilterHolder filterHolder = new FilterHolder(CrossOriginFilter.class);
+        filterHolder.setInitParameter("allowedOrigins", "*");
+        filterHolder.setInitParameter("allowedMethods", "GET, POST");
+
+
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
 
         servletContextHandler.setContextPath("/");
         server.setHandler(servletContextHandler);
 
-        servletContextHandler.addServlet(ServletContainer.class, "/");
         servletContextHandler.addFilter(GuiceFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
         servletContextHandler.addFilter(BauernTinderFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
-
+        servletContextHandler.addFilter(filterHolder, "/*", null);
 
         Map<String, Class> paths = new HashMap<>();
         paths.put(PersonEndPoint.PATH, PersonEndPoint.class);

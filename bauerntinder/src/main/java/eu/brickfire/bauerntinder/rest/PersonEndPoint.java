@@ -47,6 +47,7 @@ public class PersonEndPoint {
     @POST
     @Path("register")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response savePerson(Person person) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         person.setPassword(Base64.getEncoder().encodeToString(digest.digest(person.getPassword().getBytes(StandardCharsets.UTF_8))));
@@ -60,13 +61,18 @@ public class PersonEndPoint {
     @POST
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response loginPerson(Person personA) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         personA.setPassword(Base64.getEncoder().encodeToString(digest.digest(personA.getPassword().getBytes(StandardCharsets.UTF_8))));
         Person personB = BauernTinderApp.getInjector().getInstance(PersonService.class).getPersonByEmail(personA.getEmail());
         if(MessageDigest.isEqual(personA.getPassword().getBytes(), personB.getPassword().getBytes())) {
             JSONObject jsonObject = personB.getJSON();
-            jsonObject.put("token", BauernTinderApp.getInjector().getInstance(PersonService.class).createToken(personB));
+            if(personB.getToken() == null) {
+                jsonObject.put("token", BauernTinderApp.getInjector().getInstance(PersonService.class).createToken(personB));
+            }else{
+                jsonObject.put("token", personB.getToken());
+            }
             return Response.status(201).entity(jsonObject.toJSONString()).build();
         }else{
             JSONObject jsonObject = new JSONObject();
@@ -78,6 +84,7 @@ public class PersonEndPoint {
     @POST
     @Path("token-login")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response tokenLoginPerson(Person personA) {
         if(BauernTinderApp.getInjector().getInstance(PersonService.class).checkToken(personA.getEmail(), personA.getToken())) {
             JSONObject jsonObject = BauernTinderApp.getInjector().getInstance(PersonService.class).getPersonByEmail(personA.getEmail()).getJSON();
