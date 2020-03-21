@@ -11,4 +11,5 @@ public interface FieldService {
         List<Square> getAllSquaresByFieldId(String id);
         List<Helper> getAllHelperByFieldId(String id);
         int getHelperCountByFieldId(String id);
+        Field createField(Field field);
 }

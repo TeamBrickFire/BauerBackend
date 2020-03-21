@@ -28,4 +28,8 @@
     <select id="selectHelperCountByFieldId" resultType="int">
         select count(h.id) as anzahl from bt_field as f join bt_field_helper fh on f.id = fh.field_id join bt_helper h on fh.helper_id = h.id where f.id = #{id} group by f.id;
     </select>
+
+    <insert id="insertField" parameterType="eu.brickfire.bauerntinder.type.Field" useGeneratedKeys="true" keyProperty="farmer.id" keyColumn="id">
+        insert into bt_field (id, farmer_id) value (#{id}, #{farmerId});
+    </insert>
 </mapper>

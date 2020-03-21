@@ -2,13 +2,13 @@ package eu.brickfire.bauerntinder.rest;
 
 import eu.brickfire.bauerntinder.BauernTinderApp;
 import eu.brickfire.bauerntinder.service.FieldService;
+import eu.brickfire.bauerntinder.type.Field;
 import eu.brickfire.bauerntinder.type.Helper;
 import eu.brickfire.bauerntinder.type.Square;
 import org.json.simple.JSONObject;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -62,6 +62,14 @@ public class FieldEndPoint {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("field", BauernTinderApp.getInjector().getInstance(FieldService.class).getFieldById(id).getJSON());
         jsonObject.put("helperCount", BauernTinderApp.getInjector().getInstance(FieldService.class).getHelperCountByFieldId(id));
+        return Response.status(201).entity(jsonObject.toJSONString()).build();
+    }
+
+    @POST
+    @Path("insert")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response insertField(Field field) {
+        JSONObject jsonObject = BauernTinderApp.getInjector().getInstance(FieldService.class).createField(field).getJSON();
         return Response.status(201).entity(jsonObject.toJSONString()).build();
     }
 }

@@ -7,6 +7,7 @@ import eu.brickfire.bauerntinder.type.Helper;
 import eu.brickfire.bauerntinder.type.Square;
 
 import java.util.List;
+import java.util.UUID;
 
 public class FieldServiceImpl implements FieldService {
     @Inject
@@ -27,4 +28,11 @@ public class FieldServiceImpl implements FieldService {
 
     @Override
     public int getHelperCountByFieldId(String id) { return fieldMapper.selectHelperCountByFieldId(id); }
+
+    @Override
+    public Field createField(Field field) {
+        field.setId(UUID.randomUUID().toString());
+        fieldMapper.insertField(field);
+        return getFieldById(field.getId());
+    }
 }

@@ -12,5 +12,5 @@ public interface FieldMapper {
     List<Square> selectAllSquaresByFieldId(@Param("id") String id);
     List<Helper> selectAllHelperByFieldId(@Param("id") String id);
     int selectHelperCountByFieldId(@Param("id") String id);
-
+    void insertField(Field field);
 }
