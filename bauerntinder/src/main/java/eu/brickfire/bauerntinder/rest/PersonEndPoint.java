@@ -2,6 +2,8 @@ package eu.brickfire.bauerntinder.rest;
 
 import eu.brickfire.bauerntinder.BauernTinderApp;
 import eu.brickfire.bauerntinder.service.PersonService;
+import eu.brickfire.bauerntinder.type.Farmer;
+import eu.brickfire.bauerntinder.type.Helper;
 import eu.brickfire.bauerntinder.type.Person;
 import org.json.simple.JSONObject;
 
@@ -27,13 +29,31 @@ public class PersonEndPoint {
     @GET
     @Path("helper/id/{id}")
     public Response getHelperById(@PathParam("id") String id) {
-        return Response.status(201).entity(BauernTinderApp.getInjector().getInstance(PersonService.class).getHelperById(id).getJSON().toJSONString()).build();
+        PersonService personService = BauernTinderApp.getInjector().getInstance(PersonService.class);
+        JSONObject jsonObject;
+        if(personService.isHelper(id)) {
+            jsonObject = personService.getHelperById(id).getJSON();
+            jsonObject.put("helper", true);
+        }else{
+            jsonObject = new JSONObject();
+            jsonObject.put("helper", false);
+        }
+        return Response.status(201).entity(jsonObject.toJSONString()).build();
     }
 
     @GET
     @Path("farmer/id/{id}")
     public Response getFarmerById(@PathParam("id") String id) {
-        return Response.status(201).entity(BauernTinderApp.getInjector().getInstance(PersonService.class).getFarmerById(id).getJSON().toJSONString()).build();
+        PersonService personService = BauernTinderApp.getInjector().getInstance(PersonService.class);
+        JSONObject jsonObject;
+        if(personService.isFarmer(id)) {
+            jsonObject = personService.getFarmerById(id).getJSON();
+            jsonObject.put("farmer", true);
+        }else{
+            jsonObject = new JSONObject();
+            jsonObject.put("farmer", false);
+        }
+        return Response.status(201).entity(jsonObject.toJSONString()).build();
     }
 
     @GET
@@ -94,6 +114,22 @@ public class PersonEndPoint {
             jsonObject.put("login", false);
             return Response.status(201).entity(jsonObject.toJSONString()).build();
         }
+    }
+
+    @POST
+    @Path("farmer/create")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response chooseFarmer(Farmer farmer) {
+        return Response.status(201).entity(BauernTinderApp.getInjector().getInstance(PersonService.class).saveFarmer(farmer)).build();
+    }
+
+    @POST
+    @Path("helper/create")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response chooseHelper(Helper helper) {
+        return Response.status(201).entity(BauernTinderApp.getInjector().getInstance(PersonService.class).saveHelper(helper)).build();
     }
 
 

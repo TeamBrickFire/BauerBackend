@@ -49,4 +49,20 @@
 		update bt_person SET surname = #{name}, firstname = #{firstname}, email = #{email}, phone = #{phone}, password = #{password}, token = #{token} where id = #{id};
 	</update>
 
+	<select id="selectIsHelper" resultType="boolean">
+		select count(1) from bt_helper where id = #{id};
+	</select>
+
+	<select id="selectIsFarmer" resultType="boolean">
+		select count(1) from bt_farmer where email = #{id};
+	</select>
+
+	<insert id="insertFarmer" parameterType="eu.brickfire.bauerntinder.type.Farmer" useGeneratedKeys="true" keyProperty="farmer.id" keyColumn="id">
+		insert into bt_farmer (id) VALUE (#{id});
+	</insert>
+
+	<insert id="insertHelper" parameterType="eu.brickfire.bauerntinder.type.Helper" useGeneratedKeys="true" keyProperty="helper.id" keyColumn="id">
+		insert into bt_helper (id) VALUE (#{id});
+	</insert>
+
 </mapper>

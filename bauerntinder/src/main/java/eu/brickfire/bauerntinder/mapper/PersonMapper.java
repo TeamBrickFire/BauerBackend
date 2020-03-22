@@ -8,10 +8,24 @@ import org.apache.ibatis.annotations.Param;
 public interface PersonMapper {
 
     Person selectPersonById(@Param("id") String id);
+
     Person selectPersonByEmail(@Param("email") String email);
+
     void insertPerson(Person person);
+
     boolean selectEmailInPerson(@Param("email") String email);
+
     Helper selectHelperById(@Param("id") String id);
+
     Farmer selectFarmerById(@Param("id") String id);
+
     void updatePersonById(Person person);
+
+    boolean selectIsHelper(@Param("id") String id);
+
+    boolean selectIsFarmer(@Param("id") String id);
+
+    void insertFarmer(Farmer farmer);
+
+    void insertHelper(Helper helper);
 }

@@ -18,7 +18,15 @@ public interface PersonService {
 
     Farmer getFarmerById(String id);
 
+    boolean isHelper(String id);
+
+    boolean isFarmer(String id);
+
     String createToken(Person person);
 
     boolean checkToken(String id, String token);
+
+    Helper saveHelper(Helper helper);
+
+    Farmer saveFarmer(Farmer farmer);
 }

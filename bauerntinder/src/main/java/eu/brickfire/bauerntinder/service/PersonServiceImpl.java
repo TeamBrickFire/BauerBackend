@@ -47,6 +47,16 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public boolean isHelper(String id) {
+        return personMapper.selectIsHelper(id);
+    }
+
+    @Override
+    public boolean isFarmer(String id) {
+        return personMapper.selectIsFarmer(id);
+    }
+
+    @Override
     public String createToken(Person person) {
         person.setToken(generateRandomString(32));
         personMapper.updatePersonById(person);
@@ -56,6 +66,18 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public boolean checkToken(String id, String token) {
         return personMapper.selectPersonById(id).getToken().equals(token);
+    }
+
+    @Override
+    public Helper saveHelper(Helper helper) {
+        personMapper.insertHelper(helper);
+        return getHelperById(helper.getId());
+    }
+
+    @Override
+    public Farmer saveFarmer(Farmer farmer) {
+        personMapper.insertFarmer(farmer);
+        return getFarmerById(farmer.getId());
     }
 
 
