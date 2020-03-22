@@ -22,5 +22,10 @@ public interface FieldMapper {
     void insertField(Field field);
 
     void insertSquare(Square square);
+<<<<<<< HEAD
+
+
+=======
     void updateSquare(Square square);
+>>>>>>> set squares
 }

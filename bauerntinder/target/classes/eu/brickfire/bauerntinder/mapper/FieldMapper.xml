@@ -18,11 +18,11 @@
     </select>
 
     <select id="selectSquareById" resultMap="square">
-        select sq.id, sq.field_id from bt_square as sq where sq.id = #{id};
+        select sq.id, sq.field_id, sq.x, sq.y, sq.blocked from bt_square as sq where sq.id = #{id};
     </select>
 
     <select id="selectAllSquaresByFieldId" resultMap="square">
-        select sq.id, sq.field_id from bt_square as sq where sq.field_id = #{id};
+        select sq.id, sq.field_id, sq.x, sq.y, sq.blocked from bt_square as sq where sq.field_id = #{id};
     </select>
     
     <select id="selectAllHelperByFieldId" resultMap="eu.brickfire.bauerntinder.mapper.PersonMapper.helper">
@@ -38,6 +38,10 @@
     </insert>
 
     <insert id="insertSquare" parameterType="eu.brickfire.bauerntinder.type.Square" useGeneratedKeys="true" keyProperty="farmer.id" keyColumn="id">
-        insert into bt_square (id, field_id) value (#{id}, #{fieldId});
+        insert into bt_square (id, field_id, x, y, blocked) value (#{id}, #{fieldId}, #{x}, #{y}, #{isBlocked});
     </insert>
+
+    <update id="updateSquare">
+        update bt_square set field_id = #{fieldId}, x = #{x}, y = #{y}, blocked = #{isBlocked} where id = #{id};
+    </update>
 </mapper>

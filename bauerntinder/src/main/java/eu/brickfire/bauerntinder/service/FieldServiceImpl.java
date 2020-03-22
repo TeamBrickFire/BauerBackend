@@ -46,5 +46,13 @@ public class FieldServiceImpl implements FieldService {
         return getSquareById(square.getId());
     }
 
-
+    @Override
+    public void setSquare(Square square) {
+        if(square.getId() == null || square.getId().equals("") || getSquareById(square.getId()) == null){
+            System.out.println("New Square:" + square.getJSON());
+            insertSquare(square);
+        } else {
+            fieldMapper.updateSquare(square);
+        }
+    }
 }
