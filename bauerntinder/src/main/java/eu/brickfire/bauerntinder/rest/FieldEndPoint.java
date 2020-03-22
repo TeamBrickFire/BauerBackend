@@ -15,6 +15,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.*;
+import java.util.ArrayList;
 
 @Path("/")
 public class FieldEndPoint {
@@ -94,27 +95,35 @@ public class FieldEndPoint {
     @Path("setSquares/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response insertField(@PathParam("id") String fieldId, JSONObject squares) {
-        JSONObject allUpdateSquares = new JSONObject();
+        FieldService fieldService = BauernTinderApp.getInjector().getInstance(FieldService.class);
+        List<Square> currentSquares = fieldService.getAllSquaresByFieldId(fieldId);
+        System.out.println("--- setSquares start");
 
         for (int x = 0; x < squares.size(); x ++){
             LinkedHashMap row = (LinkedHashMap) squares.get(x + "");
             for (int y = 0; y < row.size(); y ++){
                 LinkedHashMap square = (LinkedHashMap) row.get(y + "");
                 Object id = square.get("id");
-                String idString = "";
+                final String idString = id != null ? id.toString() : "";
+                Square sq = new Square(idString, fieldId, x, y, (boolean) square.get("blocked"));
 
-                if(id != null){
-                    idString = id.toString();
+                if(currentSquares.stream().anyMatch(i -> i.getId().equals(idString))){
+                    if(!sq.equals(currentSquares.stream().filter(i -> i.getId().equals(idString)).findFirst().get())){
+                        fieldService.setSquare(sq);
+                        System.out.print("Update\t");
+                    } else {
+                        System.out.print("Get\t");
+                    }
+                } else {
+                    System.out.print("Insert\t");
+                    fieldService.setSquare(sq);
                 }
 
                 System.out.println(idString + ", " +  x+ ", " + y + ", " + (boolean) square.get("blocked"));
-
-                Square sq = new Square(idString, fieldId, x, y, (boolean) square.get("blocked"));
-
-                BauernTinderApp.getInjector().getInstance(FieldService.class).setSquare(new Square(idString, fieldId, x, y, (boolean) square.get("blocked")));
             }
         }
 
+        System.out.println("--- setSquares end");
 
 
         //System.out.println(squares.toJSONString());

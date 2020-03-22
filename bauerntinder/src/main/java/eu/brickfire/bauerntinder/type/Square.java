@@ -75,4 +75,14 @@ public class Square implements Serializable {
         json.put("blocked", isBlocked);
         return json;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj.getClass() == Square.class){
+            Square sq = (Square) obj;
+            return id.equals(sq.id) && fieldId.equals(sq.fieldId) && x == sq.x && y == sq.y && isBlocked == sq.isBlocked;
+        } else {
+            return super.equals(obj);
+        }
+    }
 }
