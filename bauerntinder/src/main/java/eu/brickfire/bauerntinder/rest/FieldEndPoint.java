@@ -10,12 +10,8 @@ import org.json.simple.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.*;
-import java.util.ArrayList;
 
 @Path("/")
 public class FieldEndPoint {
@@ -25,6 +21,20 @@ public class FieldEndPoint {
     @Path("id/{id}")
     public Response getFieldById(@PathParam("id") String id) {
         return Response.status(201).entity(BauernTinderApp.getInjector().getInstance(FieldService.class).getFieldById(id).getJSON().toJSONString()).build();
+    }
+
+    @GET
+    @Path("farmer/id/{id}")
+    public Response getFieldsByFarmerId(@PathParam("id") String id) {
+        JSONObject holder = new JSONObject();
+
+        List<Field> fieldsByFarmerId = BauernTinderApp.getInjector().getInstance(FieldService.class).getFieldsByFarmerId(id);
+        for (int i = 0; i < fieldsByFarmerId.size(); i++) {
+            Field field = fieldsByFarmerId.get(i);
+            holder.put(i, field.getJSON());
+        }
+
+        return Response.status(201).entity(holder.toJSONString()).build();
     }
 
     @GET

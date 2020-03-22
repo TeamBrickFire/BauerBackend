@@ -55,4 +55,9 @@ public class FieldServiceImpl implements FieldService {
             fieldMapper.updateSquare(square);
         }
     }
+
+    @Override
+    public List<Field> getFieldsByFarmerId(String id) {
+        return fieldMapper.selectFieldsByFarmerId(id);
+    }
 }

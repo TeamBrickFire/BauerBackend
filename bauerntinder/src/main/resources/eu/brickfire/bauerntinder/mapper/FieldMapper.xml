@@ -17,6 +17,11 @@
         select f.id, f.farmer_id from bt_field as f where f.id = #{id};
     </select>
 
+    <select id="selectFieldsByFarmerId" resultMap="field">
+        select field.id, field.farmer_id from bt_field as field join bt_farmer as farmer on field.farmer_id = farmer.id where farmer.id = #{id};
+    </select>
+
+
     <select id="selectSquareById" resultMap="square">
         select sq.id, sq.field_id, sq.x, sq.y, sq.blocked from bt_square as sq where sq.id = #{id};
     </select>

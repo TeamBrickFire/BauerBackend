@@ -22,4 +22,6 @@ public interface FieldService {
 
         Square insertSquare(Square square);
         void setSquare(Square square);
+
+        List<Field> getFieldsByFarmerId(String id);
 }

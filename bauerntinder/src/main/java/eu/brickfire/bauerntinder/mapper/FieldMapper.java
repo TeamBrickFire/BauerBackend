@@ -23,4 +23,6 @@ public interface FieldMapper {
 
     void insertSquare(Square square);
     void updateSquare(Square square);
+
+    List<Field> selectFieldsByFarmerId(@Param("id") String id);
 }
