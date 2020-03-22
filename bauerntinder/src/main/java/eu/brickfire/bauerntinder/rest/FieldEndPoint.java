@@ -10,7 +10,11 @@ import org.json.simple.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.*;
 
 @Path("/")
 public class FieldEndPoint {
@@ -32,17 +36,24 @@ public class FieldEndPoint {
     @Path("squares/{id}")
     public Response selectAllSquaresByFieldId(@PathParam("id") String id) {
         List<Square> allSquares = BauernTinderApp.getInjector().getInstance(FieldService.class).getAllSquaresByFieldId(id);
-        JSONObject jsonObject = new JSONObject();
-        JSONObject jsonSquares = new JSONObject();
+        JSONObject fields = new JSONObject();
 
-        for (int i = 0; i < allSquares.size(); i++) {
-            Square square = allSquares.get(i);
-            jsonSquares.put(i + 1, square.getJSON());
+        for (Square square: allSquares) {
+            JSONObject x, y = new JSONObject();
+
+            if(!fields.containsKey(square.getX())){
+                x = new JSONObject();
+                fields.put(square.getX(), x);
+            } else {
+                x = (JSONObject) fields.get(square.getX());
+            }
+
+            x.put(square.getY(), y);
+            y.put("blocked", square.isBlocked());
+            y.put("id", square.getId());
         }
 
-        jsonObject.put("squareList", jsonSquares);
-
-        return Response.status(201).entity(jsonObject.toJSONString()).build();
+        return Response.status(201).entity(fields.toJSONString()).build();
     }
 
     @GET
@@ -77,5 +88,38 @@ public class FieldEndPoint {
     public Response insertField(Field field) {
         JSONObject jsonObject = BauernTinderApp.getInjector().getInstance(FieldService.class).createField(field).getJSON();
         return Response.status(201).entity(jsonObject.toJSONString()).build();
+    }
+
+    @POST
+    @Path("setSquares/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response insertField(@PathParam("id") String fieldId, JSONObject squares) {
+        JSONObject allUpdateSquares = new JSONObject();
+
+        for (int x = 0; x < squares.size(); x ++){
+            LinkedHashMap row = (LinkedHashMap) squares.get(x + "");
+            for (int y = 0; y < row.size(); y ++){
+                LinkedHashMap square = (LinkedHashMap) row.get(y + "");
+                Object id = square.get("id");
+                String idString = "";
+
+                if(id != null){
+                    idString = id.toString();
+                }
+
+                System.out.println(idString + ", " +  x+ ", " + y + ", " + (boolean) square.get("blocked"));
+
+                Square sq = new Square(idString, fieldId, x, y, (boolean) square.get("blocked"));
+
+                BauernTinderApp.getInjector().getInstance(FieldService.class).setSquare(new Square(idString, fieldId, x, y, (boolean) square.get("blocked")));
+            }
+        }
+
+
+
+        //System.out.println(squares.toJSONString());
+        //JSONObject jsonObject = BauernTinderApp.getInjector().getInstance(FieldService.class).createField(field).getJSON();
+        //return Response.status(201).entity(jsonObject.toJSONString()).build();
+        return null;
     }
 }

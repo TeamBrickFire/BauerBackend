@@ -15,4 +15,5 @@ public interface FieldMapper {
     int selectHelperCountByFieldId(@Param("id") String id);
     void insertField(Field field);
     void insertSquare(Square square);
+    void updateSquare(Square square);
 }

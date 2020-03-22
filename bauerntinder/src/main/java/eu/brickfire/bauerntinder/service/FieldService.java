@@ -14,4 +14,5 @@ public interface FieldService {
         int getHelperCountByFieldId(String id);
         Field createField(Field field);
         Square insertSquare(Square square);
+        void setSquare(Square square);
 }
